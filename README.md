@@ -1,24 +1,35 @@
-[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=21979582)
-[p2-link]: https://khoury-cs3650.github.io/p2.html
-# Project 2: File System
+# FUSE Filesystem
 
-This is the starter code for [Project 2][p2-link]. The following contents are provided:
+A custom userspace filesystem built with [FUSE](https://github.com/libfuse/libfuse) (Filesystem in Userspace) in C. Implements a fully functional filesystem stored in a 1MB disk image with support for:
 
-- [Makefile](Makefile)   - Targets are explained in the assignment text
-- [README.md](README.md) - This README
-- [helpers](helpers)     - Helper code implementing access to bitmaps and blocks
-- [hints](hints)         - Incomplete bits and pieces that you might want to use as inspiration
-- [nufs.c](nufs.c)       - The main file of the file system driver
-- [test.pl](test.pl)     - Tests to exercise the file system
+- File creation, reading, writing, and deletion
+- Nested directories (mkdir, rmdir, listing)
+- File renaming and moving between directories
+- Hard links
+- File truncation and timestamps
+- Indirect block pointers for large files (up to 800KB+)
 
-## Running the tests
+## Architecture
 
-You might need install an additional package to run the provided tests:
+- **Block layer** (`helpers/blocks.c`) — mmaps a 1MB disk image into 256 × 4KB blocks
+- **Bitmap allocator** (`helpers/bitmap.c`) — tracks free blocks and inodes
+- **Inode system** (`inode.c`) — manages file metadata with direct and indirect block pointers
+- **Directory layer** (`directory.c`) — maps filenames to inodes within directory blocks
+- **Storage layer** (`storage.c`) — bridges FUSE callbacks to the inode/directory system
+- **FUSE driver** (`nufs.c`) — implements the FUSE callback interface
 
-```
-$ sudo apt-get install libtest-simple-perl
-```
+## Running
 
-Then using `make test` will run the provided tests.
+This project is designed to run in a **Linux environment** (e.g., GitHub Codespaces, Docker, or a Linux VM). FUSE requires kernel support that is not natively available on macOS or Windows.
 
+### Quick Start with GitHub Codespaces
 
+1. Click **Code → Codespaces → Create codespace on main** from the GitHub repo
+2. In the terminal:
+
+sudo apt-get install -y libfuse-dev pkg-config libtest-simple-perl
+make mount
+
+## Unmount and Remove Build Artifacts
+make unmount   # Unmount
+make clean     # Remove build artifacts
