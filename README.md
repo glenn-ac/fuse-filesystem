@@ -20,7 +20,7 @@ A custom userspace filesystem built with [FUSE](https://github.com/libfuse/libfu
 
 ## Running
 
-This project is designed to run in a **Linux environment** (e.g., GitHub Codespaces, Docker, or a Linux VM). FUSE requires kernel support that is not natively available on macOS or Windows.
+This project is designed to run in a **Linux environment** (I used GitHub Codespaces for this project). FUSE requires kernel support that is not natively available on macOS or Windows.
 
 ### Quick Start with GitHub Codespaces
 
